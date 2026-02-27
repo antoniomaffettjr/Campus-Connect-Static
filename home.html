@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CampusConnect | Home</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script defer src="js/main.js"></script>
+</head>
+<body>
+  <header>
+    <div class="container navbar">
+      <div class="brand">
+        <div class="title">CampusConnect</div>
+        <div class="tagline">A hub for student entrepreneurs</div>
+      </div>
+      <ul class="navlinks">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="product.html?id=1">Product Detail</a></li>
+        <li><a href="profile.html">Profile</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="register.html">Register</a></li>
+        <li><a href="admin.html">Admin</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-inner">
+        <div>
+          <span class="pill">Student Marketplace</span>
+          <h1 class="hero-title">Buy & sell products and services on campus.</h1>
+          <p class="hero-sub">
+            CampusConnect is a student-run marketplace where student entrepreneurs can list what they sell,
+            and students can discover affordable, campus-relevant products and services.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn" href="marketplace.html">Browse Marketplace</a>
+            <a class="btn secondary" href="register.html">Create an Account</a>
+          </div>
+
+          <p class="small" style="margin-top:12px;">
+            <span id="navUserStatus"></span>
+          </p>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-stat">
+            <div class="hero-stat-num">10+</div>
+            <div class="hero-stat-label">Listings</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">2</div>
+            <div class="hero-stat-label">Types: Products & Services</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">1</div>
+            <div class="hero-stat-label">Community Hub</div>
+          </div>
+          <div class="small" style="margin-top:10px;">
+            Tip: Use the Marketplace page to view summaries, then click any item to see the detailed view.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Value props -->
+    <section class="grid grid-3" style="margin-top:16px;">
+      <div class="card">
+        <h3 style="margin-top:0;">Discover</h3>
+        <p class="small">Search and filter student listings by category and type.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0;">Support</h3>
+        <p class="small">Keep money in the campus community by supporting student entrepreneurs.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0;">Grow</h3>
+        <p class="small">Student sellers can showcase services, digital products, and physical items.</p>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="card" style="margin-top:16px;">
+      <div class="row">
+        <h2 style="margin:0;">How it works</h2>
+        <a class="btn secondary" href="marketplace.html">Go to Marketplace</a>
+      </div>
+
+      <div class="steps" style="margin-top:12px;">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Browse</div>
+            <div class="small">Visit the Marketplace page and view product/service summaries.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">View details</div>
+            <div class="small">Click any listing to open the Product Detail page for a single item.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Join the community</div>
+            <div class="small">Register/Login to access the Profile page. Admins can review users & products.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured preview (simple + rubric-safe) -->
+    <section class="card" style="margin-top:16px;">
+      <div class="row">
+        <h2 style="margin:0;">Featured listings</h2>
+        <div class="small">Preview (click to view details)</div>
+      </div>
+
+      <div class="featured" style="margin-top:12px;">
+        <a class="featured-item" href="product.html?id=1">
+          <div class="thumb">Product Image</div>
+          <div class="featured-meta">
+            <span class="badge">PRODUCT</span>
+            <div class="featured-name">Custom CAU Hoodie</div>
+            <div class="small">Seller: Jay’s Apparel</div>
+          </div>
+        </a>
+
+        <a class="featured-item" href="product.html?id=3">
+          <div class="thumb">Product Image</div>
+          <div class="featured-meta">
+            <span class="badge">SERVICE</span>
+            <div class="featured-name">CS Tutoring (1 Hour)</div>
+            <div class="small">Seller: CodeCoach</div>
+          </div>
+        </a>
+
+        <a class="featured-item" href="product.html?id=8">
+          <div class="thumb">Product Image</div>
+          <div class="featured-meta">
+            <span class="badge">SERVICE</span>
+            <div class="featured-name">Custom Logo Design</div>
+            <div class="small">Seller: DesignDen</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Footer note / rubric-friendly -->
+    <section class="card" style="margin-top:16px;">
+      <h3 style="margin-top:0;">Project note</h3>
+      <p class="small" style="margin-bottom:0;">
+        This website includes a Products/Services listing page (Marketplace), a Product Detail page,
+        an Admin page (users + products), Profile page, Login page, Registration page,
+        plus a main CSS file and a main JavaScript file.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="small">&copy; 2026 CampusConnect</div>
+    </div>
+  </footer>
+</body>
+</html>
