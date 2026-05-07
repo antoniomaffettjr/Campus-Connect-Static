@@ -1,37 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CampusConnect | Profile</title>
-  <link rel="stylesheet" href="css/styles.css" />
-  <script defer src="js/main.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Connect | Profile</title>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+
   <header>
-    <div class="container navbar">
-      <div class="brand">
-        <div class="title">CampusConnect</div>
-        <div class="tagline">Member Profile</div>
-      </div>
-      <ul class="navlinks">
-        <li><a href="home.html">Home</a></li>
-        <li><a href="marketplace.html">Marketplace</a></li>
-        <li><a href="profile.html">Profile</a></li>
-        <li><a href="login.html">Login</a></li>
-        <li><a href="register.html">Register</a></li>
-        <li><a href="admin.html">Admin</a></li>
-      </ul>
-    </div>
+    <nav>
+      <h1>Campus Connect</h1>
+      <a href="index.html">Home</a>
+      <a href="marketplace.html">Marketplace</a>
+      <a href="cart.html">Cart</a>
+      <a href="profile.html">Profile</a>
+    </nav>
   </header>
 
   <main class="container">
-    <p class="small"><span id="navUserStatus"></span></p>
-    <div id="profileWrap"></div>
+    <section class="profile-card">
+      <h2>My Profile</h2>
+      <div id="profileInfo">
+        <p>Loading profile...</p>
+      </div>
+      <button id="logoutBtn" style="display: none;">Logout</button>
+    </section>
+
+    <section class="orders-section">
+      <h2>My Order History</h2>
+      <div id="ordersContainer">
+        <p>Loading orders...</p>
+      </div>
+    </section>
   </main>
 
-  <footer>
-    <div class="container"><div class="small">&copy; 2026 CampusConnect</div></div>
-  </footer>
+  <script src="js/main.js"></script>
 </body>
 </html>

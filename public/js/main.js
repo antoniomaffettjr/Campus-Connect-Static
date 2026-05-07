@@ -1,7 +1,26 @@
 function $(id) { return document.getElementById(id); }
 function money(n) { return `$${Number(n).toFixed(2)}`; }
 
-const PRODUCTS = [
+async function loadProductsFromAPI() {
+  try {
+    const response = await fetch("/api/products");
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch products");
+    }
+
+    const products = await response.json();
+
+    if (Array.isArray(products) && products.length > 0) {
+      PRODUCTS = products;
+      console.log("Products loaded from MongoDB:", PRODUCTS);
+    }
+  } catch (error) {
+    console.error("Using local product data because API failed:", error.message);
+  }
+}
+
+let PRODUCTS = [
   { id: 1, name: "Custom CAU Hoodie", type: "product", category: "Clothing & Merch", price: 45, seller: "Jay’s Apparel", rating: 4.8,
     description: "Custom-made hoodie designed by a student entrepreneur. Warm, durable, and campus-ready." },
   { id: 2, name: "Trap Beat License (Non-Exclusive)", type: "product", category: "Digital Products", price: 30, seller: "Tony Beats", rating: 4.9,
@@ -64,6 +83,40 @@ function setNavStatus() {
   }
 }
 
+function addCurrentProductToCart() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+
+  const product = PRODUCTS.find((p) => String(p._id || p.id) === String(id));
+
+  if (!product) {
+    alert("Product not found.");
+    return;
+  }
+
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const existingItem = cart.find(
+    (item) => String(item._id || item.id) === String(product._id || product.id)
+  );
+
+  if (existingItem) {
+    existingItem.quantity = Number(existingItem.quantity || 1) + 1;
+  } else {
+    cart.push({
+      _id: product._id,
+      id: product._id || product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+    });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  alert("Item added to cart!");
+  window.location.href = "cart.html";
+}
 
 async function getCart() {
   try {
@@ -220,7 +273,7 @@ function renderMarketplace() {
         <div class="small">Category: <strong>${p.category}</strong></div>
         <div class="row" style="margin-top:12px;">
           <div class="price">${money(p.price)}</div>
-          <a class="btn secondary" href="product.html?id=${p.id}">View Details</a>
+          <a class="btn secondary" href="product.html?id=${p._id || p.id}">View Details</a>
         </div>
       </div>
     `).join("");
@@ -234,15 +287,21 @@ function renderMarketplace() {
 
 
 function renderProductDetail() {
-  const wrap = $("productDetail");
+  const wrap = document.querySelector("#productDetail");
   if (!wrap) return;
 
   const params = new URLSearchParams(window.location.search);
-  const id = Number(params.get("id"));
-  const p = PRODUCTS.find(x => x.id === id);
+  const id = params.get("id");
 
-  if (!p) {
-    wrap.innerHTML = `<div class="notice">Product not found. <a href="marketplace.html"><strong>Back to Marketplace</strong></a></div>`;
+  const product = PRODUCTS.find((p) => String(p._id || p.id) === String(id));
+
+  if (!product) {
+    wrap.innerHTML = `
+      <div class="notice">
+        Product not found.
+        <a href="marketplace.html"><strong>Back to Marketplace</strong></a>
+      </div>
+    `;
     return;
   }
 
@@ -251,50 +310,74 @@ function renderProductDetail() {
       <div class="card">
         <div class="thumb" style="height:240px;">Product Image</div>
       </div>
+
       <div class="card">
         <div class="row">
-          <span class="badge">${p.type.toUpperCase()}</span>
-          <span class="small">⭐ ${p.rating}</span>
+          <span class="badge">${product.type ? product.type.toUpperCase() : "PRODUCT"}</span>
+          <span class="small">⭐ ${product.rating || "N/A"}</span>
         </div>
-        <h2 style="margin:10px 0 6px;">${p.name}</h2>
-        <div class="small">Category: <strong>${p.category}</strong></div>
-        <div class="small">Seller: <strong>${p.seller}</strong></div>
-        <p class="small" style="margin-top:12px; line-height:1.5;">${p.description}</p>
+
+        <h2 style="margin:10px 0 6px;">${product.name}</h2>
+
+        <div class="small">
+          <strong>Category:</strong> ${product.category || "N/A"}
+        </div>
+
+        <div class="small">
+          <strong>Seller:</strong> ${product.seller || "N/A"}
+        </div>
+
+        <p class="small" style="margin-top:12px; line-height:1.5;">
+          ${product.description || "No description available."}
+        </p>
+
         <div class="row" style="margin-top:12px;">
-          <div class="price">${money(p.price)}</div>
+          <div class="price">$${Number(product.price || 0).toFixed(2)}</div>
           <button class="btn" id="addToCartBtn">Add to Cart</button>
         </div>
       </div>
     </div>
 
     <div id="cartPreview"></div>
-
-    <div class="card" style="margin-top:16px;">
-      <h3 style="margin-top:0;">Ratings & Reviews (Placeholder)</h3>
-      <ul class="small">
-        <li>“Great quality and fast response.”</li>
-        <li>“Would recommend to other students.”</li>
-      </ul>
-    </div>
   `;
 
-  const addBtn = $("addToCartBtn");
-  if (addBtn) {
-    addBtn.addEventListener("click", () => {
-      addToCart({
-        id: p.id,
-        name: p.name,
-        type: p.type,
-        category: p.category,
-        price: p.price,
-        seller: p.seller
-      });
+
+}
+
+function addCurrentProductToCart() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+
+  const product = PRODUCTS.find((p) => String(p._id || p.id) === String(id));
+
+  if (!product) {
+    alert("Product not found.");
+    return;
+  }
+
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const existingItem = cart.find(
+    (item) => String(item._id || item.id) === String(product._id || product.id)
+  );
+
+  if (existingItem) {
+    existingItem.quantity = Number(existingItem.quantity || 1) + 1;
+  } else {
+    cart.push({
+      _id: product._id,
+      id: product._id || product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
     });
   }
 
-  renderCartPreview();
-}
+  localStorage.setItem("cart", JSON.stringify(cart));
 
+  alert("Item added to cart!");
+  window.location.href = "cart.html";
+}
 
 function handleRegister() {
   const form = $("registerForm");
@@ -328,31 +411,57 @@ function handleRegister() {
 }
 
 function handleLogin() {
-  const form = $("loginForm");
-  if (!form) return;
+  const loginForm = document.querySelector("#loginForm");
 
-  form.addEventListener("submit", (e) => {
+  if (!loginForm) {
+    return;
+  }
+
+  loginForm.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    const email = $("loginEmail").value.trim().toLowerCase();
-    const password = $("loginPassword").value.trim();
+    const emailInput = document.querySelector("#loginEmail");
+    const passwordInput = document.querySelector("#loginPassword");
 
-    const users = getUsers();
-    const found = users.find(u => u.email === email && u.password === password);
-
-    if (!found) {
-      $("loginMsg").innerHTML = `<div class="notice">Invalid login. Try registering first.</div>`;
+    if (!emailInput || !passwordInput) {
+      alert("Login form inputs are missing. Check loginEmail and loginPassword IDs.");
       return;
     }
 
-    setCurrentUser({ name: found.name, email: found.email, role: found.role });
-    $("loginMsg").innerHTML = `<div class="success">Logged in! Redirecting...</div>`;
-    setNavStatus();
-    setTimeout(() => {
-      window.location.href = "profile.html";
-    }, 700);
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Login failed");
+        return;
+      }
+
+      localStorage.setItem("campusConnectToken", data.token);
+      localStorage.setItem("campusConnectUser", JSON.stringify(data.user));
+
+      alert("Login successful!");
+      window.location.href = "marketplace.html";
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Something went wrong during login.");
+    }
   });
 }
+
 
 
 function renderProfile() {
@@ -456,15 +565,302 @@ function renderAdmin() {
     </div>
   `;
 }
+async function createOrderFromCart() {
+  const token = localStorage.getItem("campusConnectToken");
 
+  if (!token) {
+    alert("Please log in before checking out.");
+    window.location.href = "login.html";
+    return;
+  }
+
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  if (cart.length === 0) {
+    alert("Your cart is empty.");
+    return;
+  }
+
+  const items = cart.map((item) => ({
+    productId: item._id || item.id,
+    quantity: item.quantity || 1,
+  }));
+
+  const totalPrice = cart.reduce((total, item) => {
+    return total + Number(item.price || 0) * Number(item.quantity || 1);
+  }, 0);
+
+  try {
+    const res = await fetch("/api/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        items,
+        totalPrice,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "Order failed");
+      return;
+    }
+
+    localStorage.removeItem("cart");
+
+    alert("Order placed successfully!");
+    window.location.href = "profile.html";
+  } catch (error) {
+    console.error("Checkout error:", error);
+    alert("Something went wrong during checkout.");
+  }
+}
+
+const checkoutBtn = document.querySelector("#checkoutBtn");
+
+if (checkoutBtn) {
+  checkoutBtn.addEventListener("click", createOrderFromCart);
+}
+
+function renderCartPage() {
+  const cartItemsDiv = document.querySelector("#cartItems");
+  const cartTotalSpan = document.querySelector("#cartTotal");
+
+  if (!cartItemsDiv || !cartTotalSpan) {
+    return;
+  }
+
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  if (cart.length === 0) {
+    cartItemsDiv.innerHTML = `<p>Your cart is empty.</p>`;
+    cartTotalSpan.textContent = "0";
+    return;
+  }
+
+  cartItemsDiv.innerHTML = cart
+    .map(
+      (item) => `
+        <div class="card" style="margin-bottom: 12px;">
+          <h3>${item.name}</h3>
+          <p>Price: $${item.price}</p>
+          <p>Quantity: ${item.quantity || 1}</p>
+        </div>
+      `
+    )
+    .join("");
+
+  const total = cart.reduce((sum, item) => {
+    return sum + Number(item.price || 0) * Number(item.quantity || 1);
+  }, 0);
+
+  cartTotalSpan.textContent = total.toFixed(2);
+}
+
+async function createOrderFromCart() {
+  const token = localStorage.getItem("campusConnectToken");
+
+  if (!token) {
+    alert("Please log in before checking out.");
+    window.location.href = "login.html";
+    return;
+  }
+
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  if (cart.length === 0) {
+    alert("Your cart is empty.");
+    return;
+  }
+
+  const items = cart.map((item) => ({
+    productId: item._id || item.id,
+    quantity: item.quantity || 1,
+  }));
+
+  const totalPrice = cart.reduce((total, item) => {
+    return total + Number(item.price || 0) * Number(item.quantity || 1);
+  }, 0);
+
+  try {
+    const res = await fetch("/api/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        items,
+        totalPrice,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "Order failed");
+      return;
+    }
+
+    localStorage.removeItem("cart");
+
+    alert("Order placed successfully!");
+    window.location.href = "profile.html";
+  } catch (error) {
+    console.error("Checkout error:", error);
+    alert("Something went wrong during checkout.");
+  }
+}
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.location.pathname.includes("profile.html")) {
+    loadProfilePage();
+  }
+});
+
+async function loadProfilePage() {
+  const profileInfo = document.getElementById("profileInfo");
+  const ordersContainer = document.getElementById("ordersContainer");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  const token = localStorage.getItem("campusConnectToken");
+  const userData = localStorage.getItem("campusConnectUser");
+
+  if (!token || !userData) {
+    profileInfo.innerHTML = `
+      <p><strong>Not signed in</strong></p>
+      <p>Profile page is secure. Please log in.</p>
+      <a href="login.html">Go to Login</a>
+    `;
+
+    ordersContainer.innerHTML = `
+      <p>You must be logged in to view your orders.</p>
+    `;
+
+    return;
+  }
+
+  const user = JSON.parse(userData);
+
+  profileInfo.innerHTML = `
+    <p><strong>Name:</strong> ${user.name || "N/A"}</p>
+    <p><strong>Email:</strong> ${user.email || "N/A"}</p>
+    <p><strong>Role:</strong> ${user.role || "Student"}</p>
+  `;
+
+  if (logoutBtn) {
+    logoutBtn.style.display = "inline-block";
+
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("campusConnectToken");
+      localStorage.removeItem("campusConnectUser");
+      localStorage.removeItem("campusConnectCart");
+
+      alert("You have been logged out.");
+      window.location.href = "login.html";
+    });
+  }
+
+  await loadUserOrders(token);
+}
+
+async function loadUserOrders(token) {
+  const ordersContainer = document.getElementById("ordersContainer");
+
+  try {
+    const response = await fetch("/api/orders/my-orders", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const orders = await response.json();
+
+    if (!response.ok) {
+      ordersContainer.innerHTML = `
+        <p>Could not load orders: ${orders.message || "Unknown error"}</p>
+      `;
+      return;
+    }
+
+    if (orders.length === 0) {
+      ordersContainer.innerHTML = `
+        <p>You have not placed any orders yet.</p>
+        <a href="marketplace.html">Browse Marketplace</a>
+      `;
+      return;
+    }
+
+    ordersContainer.innerHTML = orders
+      .map((order) => {
+        const orderDate = new Date(order.createdAt).toLocaleDateString();
+
+        const itemsHTML = order.items
+          .map((item) => {
+            return `
+              <li>
+                ${item.product?.name || "Product"} 
+                — Quantity: ${item.quantity}
+                — $${item.price}
+              </li>
+            `;
+          })
+          .join("");
+
+        return `
+          <div class="order-card">
+            <h3>Order ID: ${order._id}</h3>
+            <p><strong>Date:</strong> ${orderDate}</p>
+            <p><strong>Status:</strong> ${order.status || "Pending"}</p>
+            <p><strong>Total:</strong> $${order.totalPrice}</p>
+
+            <h4>Items:</h4>
+            <ul>
+              ${itemsHTML}
+            </ul>
+          </div>
+        `;
+      })
+      .join("");
+  } catch (error) {
+    console.error("Order history error:", error);
+
+    ordersContainer.innerHTML = `
+      <p>Something went wrong while loading your order history.</p>
+    `;
+  }
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
+  await loadProductsFromAPI();
+
   setNavStatus();
   renderMarketplace();
   renderProductDetail();
+
+  const addToCartBtn = document.querySelector("#addToCartBtn");
+
+  if (addToCartBtn) {
+    addToCartBtn.addEventListener("click", addCurrentProductToCart);
+  }
+
   handleLogin();
   handleRegister();
   renderProfile();
   renderAdmin();
-  await loadCartCount();
+  renderCartPage();
+
+  const checkoutBtn = document.querySelector("#checkoutBtn");
+
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener("click", createOrderFromCart);
+  }
 });
+
