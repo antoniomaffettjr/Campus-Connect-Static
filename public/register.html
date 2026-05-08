@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CampusConnect | Register</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script defer src="js/main.js"></script>
+</head>
+<body>
+  <header>
+    <div class="container navbar">
+      <div class="brand">
+        <div class="title">CampusConnect</div>
+        <div class="tagline">Registration</div>
+      </div>
+      <ul class="navlinks">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="admin.html">Admin</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="card">
+      <h2 style="margin-top:0;">Create Account</h2>
+      <form id="registerForm">
+        <label class="small"><strong>Full Name</strong></label>
+        <input id="regName" type="text" required />
+        <div style="height:10px;"></div>
+
+        <label class="small"><strong>Email</strong></label>
+        <input id="regEmail" type="email" required />
+        <div style="height:10px;"></div>
+
+        <label class="small"><strong>Password</strong></label>
+        <input id="regPassword" type="password" required />
+        <div style="height:12px;"></div>
+
+        <button class="btn" type="submit">Register</button>
+      </form>
+
+      <div id="registerMsg" style="margin-top:12px;"></div>
+
+      <p class="small" style="margin-top:12px;">
+        Already registered? <a href="login.html"><strong>Login</strong></a>
+      </p>
+
+      <p class="small" style="margin-top:10px;">
+        Admin demo tip: register with an email containing <strong>admin</strong> (example: admin@cau.edu)
+      </p>
+
+      <p class="small"><span id="navUserStatus"></span></p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container"><div class="small">&copy; 2026 CampusConnect</div></div>
+  </footer>
+</body>
+</html>

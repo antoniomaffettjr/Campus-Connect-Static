@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CampusConnect | Marketplace</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script defer src="js/main.js"></script>
+</head>
+<body>
+  <header>
+    <div class="container navbar">
+      <div class="brand">
+        <div class="title">CampusConnect</div>
+        <div class="tagline">Products/Services</div>
+      </div>
+      <ul class="navlinks">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="profile.html">Profile</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="register.html">Register</a></li>
+        <li><a href="admin.html">Admin</a></li>
+        <li><a href="cart.html">Cart</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="card">
+      <h2 style="margin-top:0;">Marketplace</h2>
+      <p class="small">Summary view of all products and services (displayed using JavaScript).</p>
+
+      <div class="grid grid-3" style="margin-top:12px;">
+        <div>
+          <label class="small"><strong>Search</strong></label>
+          <input id="searchInput" type="text" placeholder="Search by item or seller..." />
+        </div>
+        <div>
+          <label class="small"><strong>Category</strong></label>
+          <select id="categorySelect"></select>
+        </div>
+        <div>
+          <label class="small"><strong>Type</strong></label>
+          <select id="typeSelect">
+            <option value="all">All Types</option>
+            <option value="product">Products</option>
+            <option value="service">Services</option>
+          </select>
+        </div>
+      </div>
+
+      <p class="small" style="margin-top:12px;"><span id="navUserStatus"></span></p>
+    </div>
+
+    <div id="marketGrid" class="grid grid-3" style="margin-top:16px;"></div>
+  </main>
+
+  <footer>
+    <div class="container"><div class="small">&copy; 2026 CampusConnect</div></div>
+  </footer>
+</body>
+</html>

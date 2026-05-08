@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CampusConnect | Login</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script defer src="js/main.js"></script>
+</head>
+<body>
+  <header>
+    <div class="container navbar">
+      <div class="brand">
+        <div class="title">CampusConnect</div>
+        <div class="tagline">Login</div>
+      </div>
+      <ul class="navlinks">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="register.html">Register</a></li>
+        <li><a href="admin.html">Admin</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="card">
+      <h2 style="margin-top:0;">Login</h2>
+      <form id="loginForm">
+        <label>Email</label>
+        <input id="loginEmail" type="email" required />
+
+        <label>Password</label>
+        <input id="loginPassword" type="password" required />
+
+        <button class="btn" type="submit">Login</button>
+      </form>
+      <div id="loginMsg" style="margin-top:12px;"></div>
+
+      <p class="small" style="margin-top:12px;">
+        No account? <a href="register.html"><strong>Register</strong></a>
+      </p>
+      <p class="small"><span id="navUserStatus"></span></p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container"><div class="small">&copy; 2026 CampusConnect</div></div>
+  </footer>
+</body>
+</html>
